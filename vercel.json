@@ -1,0 +1,26 @@
+{
+    "builds": [
+      {
+        "src": "next.config.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "api/*",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "/*",
+        "use": "@vercel/next",
+        "config": {
+          "prisma": {
+            "generate": true
+          }
+        }
+      }
+    ],
+    "routes": [
+      { "src": "/api/(.*)", "dest": "/api/$1" },
+      { "src": "/(.*)", "dest": "/$1" }
+    ]
+  }
+  

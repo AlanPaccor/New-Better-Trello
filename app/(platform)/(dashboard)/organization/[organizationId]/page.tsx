@@ -1,31 +1,25 @@
-import { db } from "@/lib/db";
+import { Suspense } from "react";
 
-const OrganizationIdPage = () => { 
-    async function create(formData: FormData) {
-        "use server";
+import { Separator } from "@/components/ui/separator";
 
-        const title = formData.get("title") as string;
+import { Info } from "./_components/info";
+import { BoardList } from "./_components/board-list";
+import { checkSubscription } from "@/lib/subscription";
 
-        await db.board.create({
-            data: {
-                title,
-            }
-        });
-    }
+const OrganizationIdPage = async () => {
+  const isPro = await checkSubscription();
 
-    return (
-        <div>
-            <form action={create}>
-                <input
-                    id="title"
-                    name="title"
-                    required
-                    placeholder="Enter a board title"
-                    className="border-black border p-1"
-                />
-            </form>
-        </div>
-   );
+  return (
+    <div className="w-full mb-20">
+      <Info isPro={isPro} />
+      <Separator className="my-4" />
+      <div className="px-2 md:px-4">
+        <Suspense fallback={<BoardList.Skeleton />}>
+          <BoardList />
+        </Suspense>
+      </div>
+    </div>
+  );
 };
 
 export default OrganizationIdPage;
